@@ -16,8 +16,16 @@ function getCurrentTabUrl(callback) {
 
 }
 
+function getVideoId(url) {
+
+  var re = /https?:\/\/www.youtube.com\/watch\?v=([^&]+)/;
+  var found = url.match(re);
+  return found ? found[1] : 'URL not valid. Could not retrieve video ID.';
+
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   getCurrentTabUrl(function(url) {
-    alert(url);
+    alert(getVideoId(url));
   });
 });
