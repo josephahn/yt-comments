@@ -1,5 +1,4 @@
 function getCurrentTabUrl(callback) {
-
   var queryInfo = {
     active: true,
     currentWindow: true
@@ -13,16 +12,67 @@ function getCurrentTabUrl(callback) {
 
     callback(url);
   });
-
 }
 
 function getVideoId(url) {
-
   var re = /https?:\/\/www.youtube.com\/watch\?v=([^&]+)/;
   var found = url.match(re);
   return found ? found[1] : null;
-
 }
+
+function fetchComments(id, cb) {
+  var requestUrl = 'http://gdata.youtube.com/feeds/api/videos/' + id + '/comments';
+  var x = new XMLHttpRequest();
+  x.open('GET', requestUrl);
+  x.responseType = 'document';
+  x.onload = function() {
+    var response = x.response;
+    cb(response);
+  };
+  x.onerror = function() {
+    renderStatus('Failed to fetch comments.');
+  };
+  x.send();
+}
+
+// http://davidwalsh.name/convert-xml-json
+function xmlToJson(xml) {
+  // Create the return object
+  var obj = {};
+
+  if (xml.nodeType == 1) { // element
+    // do attributes
+    if (xml.attributes.length > 0) {
+    obj["@attributes"] = {};
+      for (var j = 0; j < xml.attributes.length; j++) {
+        var attribute = xml.attributes.item(j);
+        obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+        // Chrome console says nodeValue is deprecated, but using 'value' instead breaks function
+      }
+    }
+  } else if (xml.nodeType == 3) { // text
+    obj = xml.nodeValue;
+  }
+
+  // do children
+  if (xml.hasChildNodes()) {
+    for(var i = 0; i < xml.childNodes.length; i++) {
+      var item = xml.childNodes.item(i);
+      var nodeName = item.nodeName;
+      if (typeof(obj[nodeName]) == "undefined") {
+        obj[nodeName] = xmlToJson(item);
+      } else {
+        if (typeof(obj[nodeName].push) == "undefined") {
+          var old = obj[nodeName];
+          obj[nodeName] = [];
+          obj[nodeName].push(old);
+        }
+        obj[nodeName].push(xmlToJson(item));
+      }
+    }
+  }
+  return obj;
+};
 
 function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
@@ -32,7 +82,11 @@ document.addEventListener('DOMContentLoaded', function() {
   getCurrentTabUrl(function(url) {
     var videoId = getVideoId(url);
     if (videoId) {
-      // make GET request
+      fetchComments(videoId, function(response) {
+        var json = xmlToJson(response);
+        console.log(json);
+        // var comments = json.feed.entry;
+      });
     } else {
       renderStatus('URL not valid. Could not retrieve video ID.');
     }
