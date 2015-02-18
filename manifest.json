@@ -6,10 +6,14 @@
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "icon128.png",
     "default_popup": "main.html"
   },
   "permissions": [
     "activeTab"
-  ]
+  ],
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
 }
