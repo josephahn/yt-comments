@@ -90,11 +90,20 @@ function searchComments(commentsArr, str) {
 }
 
 function renderComments(commentsArr) {
-  // check length
-  // loop through commentsArr
-    // extract username & text
-    // create new elements
-    // append to comments div
+  var container = document.getElementById('comments');
+  if (commentsArr.length) {
+    commentsArr.forEach(function(comment) {
+      var author = comment.author.name['#text'];
+      var text = comment.content['#text'];
+      var str = author + ': ' + text;
+
+      var newDiv = document.createElement('div');
+      var newContent = document.createTextNode(str);
+      newDiv.appendChild(newContent);
+
+      container.appendChild(newDiv);
+    });
+  }
 }
 
 function getUserInput() {
@@ -113,8 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var comments = json.feed.entry;
           var userInput = getUserInput();
           var found = searchComments(comments, userInput);
-          console.log(found);
-          // renderComments(found);
+          renderComments(found);
         });
       } else {
         renderStatus('URL not valid. Could not retrieve video ID.');
