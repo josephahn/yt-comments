@@ -72,23 +72,53 @@ function xmlToJson(xml) {
     }
   }
   return obj;
-};
+}
 
 function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTabUrl(function(url) {
-    var videoId = getVideoId(url);
-    if (videoId) {
-      fetchComments(videoId, function(response) {
-        var json = xmlToJson(response);
-        console.log(json);
-        // var comments = json.feed.entry;
-      });
-    } else {
-      renderStatus('URL not valid. Could not retrieve video ID.');
+function searchComments(commentsArr, str) {
+  var results = [];
+  var re = new RegExp(str, 'gi');
+  commentsArr.forEach(function(comment) {
+    if (comment.content['#text'].match(re)) {
+      results.push(comment);
     }
+  });
+  return results;
+}
+
+function renderComments(commentsArr) {
+  // check length
+  // loop through commentsArr
+    // extract username & text
+    // create new elements
+    // append to comments div
+}
+
+function getUserInput() {
+  return document.getElementById('form').elements['userInput'].value;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    getCurrentTabUrl(function(url) {
+      var videoId = getVideoId(url);
+      if (videoId) {
+        fetchComments(videoId, function(response) {
+          var json = xmlToJson(response);
+          var comments = json.feed.entry;
+          var userInput = getUserInput();
+          var found = searchComments(comments, userInput);
+          console.log(found);
+          // renderComments(found);
+        });
+      } else {
+        renderStatus('URL not valid. Could not retrieve video ID.');
+      }
+    });
   });
 });
