@@ -95,13 +95,19 @@ function renderComments(commentsArr) {
     commentsArr.forEach(function(comment) {
       var author = comment.author.name['#text'];
       var text = comment.content['#text'];
-      var str = author + ': ' + text;
 
-      var newDiv = document.createElement('div');
-      var newContent = document.createTextNode(str);
-      newDiv.appendChild(newContent);
+      var span = document.createElement('span');
+      span.className = 'author';
+      var spanText = document.createTextNode(author);
+      span.appendChild(spanText);
 
-      container.appendChild(newDiv);
+      var div = document.createElement('div');
+      div.className = 'comment';
+      var divText = document.createTextNode(text);
+      div.appendChild(divText);
+
+      container.appendChild(span);
+      container.appendChild(div);
     });
   }
 }
