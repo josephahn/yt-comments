@@ -8,8 +8,12 @@
       margin: 8px 8px 0;
       width: 300px;
     }
-    #comments {
+    #comments, #status {
       margin-top: 8px;
+    }
+    #status {
+      font-weight: bold;
+      color: red;
     }
     .comment {
       margin-bottom: 8px;
@@ -22,11 +26,11 @@
   <script src="main.js"></script>
 </head>
   <body>
-    <div id="status"></div>
     <form id="form">
       <input name="userInput" placeholder="Search comments for" required>
       <input type="submit" value="Submit">
     </form>
+    <div id="status"></div>
     <div id="comments"></div>
   </body>
 </html>

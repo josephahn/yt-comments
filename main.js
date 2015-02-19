@@ -112,8 +112,8 @@ function renderComments(commentsArr) {
   }
 }
 
-function clearComments() {
-  var container = document.getElementById('comments');
+function clear(id) {
+  var container = document.getElementById(id);
   while (container.hasChildNodes()) {
     container.removeChild(container.firstChild);
   }
@@ -127,7 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    clearComments();
+    clear('status');
+    clear('comments');
 
     getCurrentTabUrl(function(url) {
       var videoId = getVideoId(url);
@@ -137,10 +138,10 @@ document.addEventListener('DOMContentLoaded', function() {
           var comments = json.feed.entry;
           var userInput = getUserInput();
           var found = searchComments(comments, userInput);
-          renderComments(found);
+          found.length !== 0 ? renderComments(found) : renderStatus('No matching comments found.');
         });
       } else {
-        renderStatus('URL not valid. Could not retrieve video ID.');
+        renderStatus('ERROR: Not a Youtube video.');
       }
     });
   });
