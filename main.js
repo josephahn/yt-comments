@@ -56,7 +56,7 @@ function xmlToJson(xml) {
 
   // do children
   if (xml.hasChildNodes()) {
-    for(var i = 0; i < xml.childNodes.length; i++) {
+    for (var i = 0; i < xml.childNodes.length; i++) {
       var item = xml.childNodes.item(i);
       var nodeName = item.nodeName;
       if (typeof(obj[nodeName]) == "undefined") {
@@ -112,6 +112,13 @@ function renderComments(commentsArr) {
   }
 }
 
+function clearComments() {
+  var container = document.getElementById('comments');
+  while (container.hasChildNodes()) {
+    container.removeChild(container.firstChild);
+  }
+}
+
 function getUserInput() {
   return document.getElementById('form').elements['userInput'].value;
 }
@@ -119,6 +126,8 @@ function getUserInput() {
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('form').addEventListener('submit', function(e) {
     e.preventDefault();
+
+    clearComments();
 
     getCurrentTabUrl(function(url) {
       var videoId = getVideoId(url);

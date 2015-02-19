@@ -12,6 +12,5 @@ A Chrome extension that utilizes the Youtube API to search through all comments 
 
 * The `fetchComments` function currently only retrieves a maximum of 25 comments. Update so that all comments are fetched.
 * Since the change to Google+ powered comments, replies to comments are no longer included in the response from the Youtube API. Use Google's API. See [here](https://developers.google.com/youtube/articles/changes_to_comments).
-* Clear comments section before each search.
 * Render some message if no matches are found.
 * Add to Chrome Web Store.
